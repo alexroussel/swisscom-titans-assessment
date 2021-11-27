@@ -8,5 +8,13 @@ services:
       - 'data:/var/lib/mysql'
     ports:
       - '3306:3306'
+  backend:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/backend.Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
 volumes:
   data:
