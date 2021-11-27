@@ -2,7 +2,11 @@ package com.swisscom.backend.service;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.swisscom.backend.model.User;
+import com.swisscom.backend.dao.UserRepository;
+import com.swisscom.backend.mapper.UserMapper;
+import com.swisscom.backend.model.UserDto;
+import com.swisscom.backend.model.UserEntity;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -15,7 +19,16 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserService {
+
+    private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
+
+    public List<UserEntity> getUsers() {
+        return userRepository.findAll();
+    }
 
     public String index() {
         return "index";
@@ -32,16 +45,18 @@ public class UserService {
             try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
                 // create csv bean reader
-                CsvToBean<User> csvToBean = new CsvToBeanBuilder(reader)
-                        .withType(User.class)
+                CsvToBean<UserDto> csvToBean = new CsvToBeanBuilder(reader)
+                        .withType(UserDto.class)
                         .withIgnoreLeadingWhiteSpace(true)
                         .withSeparator(';')
                         .build();
 
                 // convert `CsvToBean` object to list of users
-                List<User> users = csvToBean.parse();
+                List<UserDto> users = csvToBean.parse();
 
-                // TODO: save users in DB?
+                // update database user table content with new list
+                userRepository.deleteAll();
+                userRepository.saveAll(userMapper.toEntityList(users));
 
                 // save users list on model
                 model.addAttribute("users", users);
