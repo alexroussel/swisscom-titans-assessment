@@ -2,7 +2,7 @@ FROM maven:3.8.3-openjdk-16-slim as build
 
 WORKDIR /app
 
-COPY ../backend .
+COPY . .
 
 RUN mvn clean package -DskipTests
 

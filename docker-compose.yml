@@ -9,17 +9,17 @@ services:
     ports:
       - '3306:3306'
   backend:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/backend.Dockerfile
+    build: 
+      context: ./backend
+    env_file:
+      - ./env/backend.env
     ports:
       - '8080:8080'
     depends_on:
       - mysql
   frontend:
     build:
-      context: .
-      dockerfile: ./dockerfiles/frontend.Dockerfile
+      context: ./frontend
     ports:
       - '80:80'
     depends_on:
