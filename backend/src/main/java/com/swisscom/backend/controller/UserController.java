@@ -1,6 +1,6 @@
 package com.swisscom.backend.controller;
 
-import com.swisscom.backend.model.UserEntity;
+import com.swisscom.backend.model.UserDto;
 import com.swisscom.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/users")
     @ResponseBody
-    public List<UserEntity> getUsers() {
+    public List<UserDto> getUsers() {
         return userService.getUsers();
     }
 

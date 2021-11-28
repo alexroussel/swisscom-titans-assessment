@@ -26,10 +26,11 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public List<UserEntity> getUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getUsers() {
+        return userMapper.toDtoList(userRepository.findAll());
     }
 
+    // © https://attacomsian.com/blog/spring-boot-upload-parse-csv-file
     public String index() {
         return "index";
     }
@@ -45,18 +46,18 @@ public class UserService {
             try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
                 // create csv bean reader
-                CsvToBean<UserDto> csvToBean = new CsvToBeanBuilder(reader)
-                        .withType(UserDto.class)
+                CsvToBean<UserEntity> csvToBean = new CsvToBeanBuilder(reader)
+                        .withType(UserEntity.class)
                         .withIgnoreLeadingWhiteSpace(true)
                         .withSeparator(';')
                         .build();
 
                 // convert `CsvToBean` object to list of users
-                List<UserDto> users = csvToBean.parse();
+                List<UserEntity> users = csvToBean.parse();
 
-                // update database user table content with new list
+                // delete and update database user table content with new list
                 userRepository.deleteAll();
-                userRepository.saveAll(userMapper.toEntityList(users));
+                userRepository.saveAll(users);
 
                 // save users list on model
                 model.addAttribute("users", users);
@@ -68,7 +69,7 @@ public class UserService {
             }
         }
 
-        return "file-upload-status";
+        return "file-upload";
     }
 
 }

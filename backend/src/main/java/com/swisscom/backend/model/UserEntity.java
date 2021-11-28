@@ -1,5 +1,6 @@
 package com.swisscom.backend.model;
 
+import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,13 +15,18 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CsvBindByName(column = "first_name")
     private String firstName;
 
+    @CsvBindByName(column = "last_name")
     private String lastName;
 
+    @CsvBindByName(column = "department")
     private String department;
 
-    private String birthDate;
+    @CsvBindByName(column = "birthdate")
+    private String birthdate;
 
+    @CsvBindByName(column = "costcenter")
     private String costCenter;
 }
