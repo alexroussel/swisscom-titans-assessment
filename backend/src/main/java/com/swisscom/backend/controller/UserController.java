@@ -5,10 +5,7 @@ import com.swisscom.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,8 +18,14 @@ public class UserController {
 
     @GetMapping("/users")
     @ResponseBody
-    public List<UserDto> getUsers() {
-        return userService.getUsers();
+    public List<UserDto> getUsers(@RequestParam(required = false) List<String> filter) {
+        return userService.getUsers(filter);
+    }
+
+    @DeleteMapping("/users")
+    @ResponseBody
+    public void deleteUsers() {
+        userService.deleteUsers();
     }
 
     @GetMapping("/")

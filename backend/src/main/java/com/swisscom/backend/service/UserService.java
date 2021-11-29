@@ -26,8 +26,18 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public List<UserDto> getUsers() {
-        return userMapper.toDtoList(userRepository.findAll());
+    public List<UserDto> getUsers(List<String> filter) {
+        List<UserDto> users;
+        if(filter == null || filter.isEmpty()){
+            users = userMapper.toDtoList(userRepository.findAll());
+        } else {
+            users = userMapper.toDtoList(userRepository.findAll(filter));
+        }
+        return users;
+    }
+
+    public void deleteUsers() {
+        userRepository.deleteAll();
     }
 
     // © https://attacomsian.com/blog/spring-boot-upload-parse-csv-file
